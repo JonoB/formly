@@ -1,6 +1,6 @@
 <?php namespace Jonob\Formly;
 
-use Meido\Form\Facades\Form;
+use Meido\Form\FormFacade as Form;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Config;
@@ -51,10 +51,10 @@ class Formly
 	/**
 	 * Static function to instantiate the class
 	 *
-	 * @param  object $defaults
+	 * @param  array $defaults
 	 * @return class
 	 */
-	public static function make($defaults = null)
+	public static function make($defaults = array())
 	{
 	    return new Formly($defaults);
 	}
@@ -64,10 +64,10 @@ class Formly
 	 *
 	 * This would usually be done via the static make() function
 	 *
-	 * @param object $defaults
+	 * @param array $defaults
 	 * @return class
 	 */
-	public function setDefaults($defaults = null)
+	public function setDefaults($defaults = array())
 	{
 		if (count($defaults) > 0)
 		{
