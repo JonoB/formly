@@ -9,7 +9,7 @@
     },
     "autoload": {
         "psr-0": {
-            "Kavango\\Formly": "src/"
+            "Jonob\\Formly": "src/"
         }
     },
     "minimum-stability": "dev"
