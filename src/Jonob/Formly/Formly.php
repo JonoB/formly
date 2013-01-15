@@ -496,7 +496,7 @@ class Formly
      * @param string $btn_class
      * @return mixed
      */
-    public function submit($value, $attributes = array(), $btn_class = 'btn')
+    public function submit($value = 'Submit', $attributes = array(), $btn_class = 'btn')
 	{
 		$attributes['type'] = 'submit';
 		if ($btn_class != 'btn')
@@ -522,7 +522,7 @@ class Formly
 	 * @param  array  $attributes
 	 * @return string
 	 */
-	public function submitDefault($value, $attributes = array())
+	public function submitDefault($value = 'Submit', $attributes = array())
 	{
 		return $this->submit($value, $attributes);
 	}
@@ -534,7 +534,7 @@ class Formly
 	 * @param  array  $attributes
 	 * @return string
 	 */
-	public function submitPrimary($value, $attributes = array())
+	public function submitPrimary($value = 'Submit', $attributes = array())
 	{
 		return $this->submit($value, $attributes, 'primary');
 	}
@@ -546,7 +546,7 @@ class Formly
 	 * @param  array  $attributes
 	 * @return string
 	 */
-	public function submitInfo($value, $attributes = array())
+	public function submitInfo($value = 'Submit', $attributes = array())
 	{
 		return $this->submit($value, $attributes, 'info');
 	}
@@ -558,7 +558,7 @@ class Formly
 	 * @param  array  $attributes
 	 * @return string
 	 */
-	public function submitSuccess($value, $attributes = array())
+	public function submitSuccess($value = 'Submit', $attributes = array())
 	{
 		return $this->submit($value, $attributes, 'success');
 	}
@@ -570,7 +570,7 @@ class Formly
 	 * @param  array  $attributes
 	 * @return string
 	 */
-	public function submitWarning($value, $attributes = array())
+	public function submitWarning($value = 'Submit', $attributes = array())
 	{
 		return $this->submit($value, $attributes, 'warning');
 	}
@@ -582,7 +582,7 @@ class Formly
 	 * @param  array  $attributes
 	 * @return string
 	 */
-	public function submitDanger($value, $attributes = array())
+	public function submitDanger($value = 'Submit', $attributes = array())
 	{
 		return $this->submit($value, $attributes, 'danger');
 	}
@@ -594,7 +594,7 @@ class Formly
 	 * @param  array  $attributes
 	 * @return string
 	 */
-	public function submitInverse($value, $attributes = array())
+	public function submitInverse($value = 'Submit', $attributes = array())
 	{
 		return $this->submit($value, $attributes, 'inverse');
 	}
@@ -606,7 +606,7 @@ class Formly
 	 * @param  array   $attributes
 	 * @return string
 	 */
-	public function reset($value, $attributes = array())
+	public function reset($value = 'Submit', $attributes = array())
 	{
 		$attributes['type'] = 'reset';
 		$attributes['class'] .= ' btn';
