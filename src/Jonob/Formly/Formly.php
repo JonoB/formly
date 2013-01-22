@@ -1,6 +1,7 @@
 <?php namespace Jonob\Formly;
 
 use Meido\Form\FormFacade as Form;
+use Illuminate\Support\MessageBag;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Config;
@@ -336,10 +337,11 @@ class Formly
 	 */
 	private function buildWrapper($field, $name, $label = '', $checkbox = false)
 	{
-		if ($this->errors)
+		if ($this->errors and $this->errors instanceof MessageBag)
 		{
 			$error = $this->errors->first($name);
 		}
+
 		$comment = '';
 		if ( ! empty($this->comments[$name]))
 		{
