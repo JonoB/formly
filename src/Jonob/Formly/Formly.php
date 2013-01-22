@@ -4,6 +4,7 @@ use Meido\Form\FormFacade as Form;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Request;
 
 /**
  * Form generation based on Twitter Bootstrap with some added goodness.
@@ -132,7 +133,7 @@ class Formly
     public function open($action = null, $method = 'POST', $attributes = array(), $https = null, $for_files = false)
 	{
 		// If an action has not been specified, use the current url
-        $action = $action ?: \Illuminate\Support\Facades\URL::current();
+        $action = $action ?: Request::fullUrl();
 
 		// Add in the form class if necessary
 		if (empty($attributes['class']))
