@@ -58,7 +58,7 @@ class Formly
 	 */
 	public static function make($defaults = array())
 	{
-	    return new Formly($defaults);
+	    return new static($defaults);
 	}
 
 	/**
