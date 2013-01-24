@@ -7,6 +7,9 @@ after failed validation and showing failed validation errors.
 Note that Meido's <a href="https://github.com/meido/form">Form</a> and <a href="https://github.com/meido/html">HTML</a> packages are required dependancies, which composer will automatically
 install for you.
 
+There is a <a href="http://www.screencast.com/t/OiBx2IChh9">5 minute video overview</a> of using Formly. Although this was originally
+done for Laravel 3, the concepts remain identical. 
+
 # Installation
 
 ### Composer
