@@ -1,8 +1,11 @@
-# Flare Form Bundle
+# Laravel Form Package
 
 Forms support in Laravel, with Twitter Bootstrap styling. All form inputs use Laravel's form helpers
 to create the actual html. Some added goodies like setting form defaults, repopulating forms
 after failed validation and showing failed validation errors.
+
+Note that Meido's <a href="https://github.com/meido/form">Form</a> and <a href="https://github.com/meido/html">HTML</a> packages are required dependancies, which composer will automatically
+install for you.
 
 # Installation
 
@@ -35,9 +38,6 @@ so that it looks something like the following:
 	...
 ),
 ```
-
-Note that Meido's <a href="https://github.com/meido/form">Form</a> and <a href="https://github.com/meido/html">HTML</a> packages are required dependancies, which composer will automatically
-install for you.
 
 # Usage
 
