@@ -8,17 +8,17 @@ Note that Meido's <a href="https://github.com/meido/form">Form</a> and <a href="
 install for you.
 
 There is a <a href="http://www.screencast.com/t/OiBx2IChh9">5 minute video overview</a> of using Formly. Although this was originally
-done for Laravel 3, the concepts remain identical. 
+done for Laravel 3, the concepts remain identical.
 
 # Installation
 
 ### Composer
 
-Add `"jonob/formly": ">=1.0.*"` to the `require` section of your `composer.json`:
+Add `"jonob/formly": "1.1.*",` to the `require` section of your `composer.json`:
 
 ```composer
 "require": {
-	"jonob/formly": ">=1.0.*"
+	"jonob/formly": "1.1.*"
 },
 ```
 
@@ -64,8 +64,8 @@ return View::make('posts.form')->with('form', $form);
 
 ### Forms
 In generaly, Formly follows Meido's default form helpers in terms of the method names and function parameters.
-There are two exceptions. Firstly, all methods are called non-statically and
-secondly the second parameter in Fomrly is the input's label. For example:
+There are two exceptions. Firstly, all methods are called non-statically and secondly the second parameter in
+Fomrly is the input's label. For example:
 ```php
 // Standard Meido form input
 Form::text($name, $value, $attributes);
@@ -165,7 +165,7 @@ public function update()
 }
 
 ```
-Notice that if validation fails, then its necessary to pass the errors and the input back to the get_ method. By doing
+Notice that if validation fails, then its necessary to redirect with the errors and the input. By doing
 this, we achieve two things:
 - The form will be automatically re-populated with the posted data.
 - Any errors will be highlighted (if you have enabled the options in Formly; see below)
@@ -197,19 +197,26 @@ $form->submitInverse('Save');
 ```
 
 ### Formly Options
-There are a couple of other options that allow you to customise how Formly works. You can override this individually
-or in bulk.
-```php
-// settting an option individually:
-$form = Formly::make();
-$form->form_class = 'form_vertical';
+There are a couple of options that allow you to customise how Formly works. You can override
+these when the class is instantiated or through the `setOption()` method. Note that `setOption()`
+can be used to set many options at once, or a single option.
 
-// Setting bulk options:
+```php
+$defaults = Post::find($id);
+
 $options = array(
 	'formClass' => 'form_vertical',
 	'autoToken' = false
 );
-$form = Formly::make()->set_options($options);
+
+// Set multiple options when the class is instantiated
+$form = Formly::make($defaults, $options);
+
+// Set multiple options using setOption()
+$form = Formly::make()->setOption($options);
+
+// Set a single option using setOption()
+$form = Formly::make()->setOption('formClass', 'form_vertical');
 ```
 
 ##### formClass (default: form_horizontal)

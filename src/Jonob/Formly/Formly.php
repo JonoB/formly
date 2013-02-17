@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Request;
  * Form generation based on Twitter Bootstrap with some added goodness.
  *
  * @author      JonoB
- * @version 	1.0.0
+ * @version 	1.1.0
  */
 class Formly
 {
@@ -46,6 +46,7 @@ class Formly
      */
     public function __construct($defaults = array())
 	{
+		$this->loadConfig();
 		$this->setDefaults($defaults);
 		$this->errors = Session::get('errors');
 	}
@@ -61,6 +62,22 @@ class Formly
 	    return new static($defaults);
 	}
 
+    /**
+     * Load all the default config options
+     */
+    private function loadConfig()
+    {
+        // L4 does not currently have a method for loading an entire config file
+        // so we have so spin through them individually for now
+        $options = array('formClass', 'autoToken', 'nameAsId', 'idPrefix', 'requiredLabel', 'requiredPrefix',
+            'requiredSuffix', 'requiredClass', 'controlGroupError', 'displayInlineErrors', 'commentClass'
+        );
+        foreach($options as $option)
+        {
+            $this->options[$option] = Config::get('formly::' . $option);
+        }
+    }
+
 	/**
 	 * Set form defaults
 	 *
@@ -75,15 +92,31 @@ class Formly
 		{
 			$this->defaults = (object)$defaults;
 		}
+
 		return $this;
 	}
 
 	/**
-	 * Set the default options for the class
+	 * Set option(s) for the class
+	 *
+	 * Call with option key and value, or an array of options
+	 *
+	 * @param string|array $key
+	 * @param string $value
+	 * @return class
 	 */
-	protected function setOptions($options = array())
+	public function setOption($key, $value = '')
 	{
-		$this->options = $options;
+		if (is_array($key))
+		{
+			$this->options = array_merge($this->options, $key);
+		}
+		else
+		{
+			$this->options[$key] = $value;
+		}
+
+		return $this;
 	}
 
 	/**
@@ -117,6 +150,7 @@ class Formly
 		{
 			$this->comments[$name] = $comment;
 		}
+
 		return $this;
 	}
 
@@ -139,18 +173,20 @@ class Formly
 		// Add in the form class if necessary
 		if (empty($attributes['class']))
 		{
-			$attributes['class'] =  Config::get('formly::formClass');
+			$attributes['class'] =  $this->getOption('formClass');
 		}
 		elseif (strpos($attributes['class'], 'form-') === false)
 		{
-			$attributes['class'] .= ' ' . Config::get('formly::formClass');
+			$attributes['class'] .= ' ' . $this->getOption('formClass');
 		}
 
 		$out = Form::open($action, $method, $attributes, $https);
-		if (Config::get('formly::autoToken'))
+
+		if ($this->getOption('autoToken'))
 		{
 			$out .= Form::hidden('csrf_token', csrf_token());
 		}
+
 		return $out;
 	}
 
@@ -205,6 +241,7 @@ class Formly
 	public function openFiles($action = null, $method = 'POST', $attributes = array(), $https = null)
 	{
 		$attributes['enctype'] = 'multipart/form-data';
+
 		return $this->open($action, $method, $attributes, $https);
 	}
 
@@ -219,6 +256,7 @@ class Formly
 	public function hidden($name, $value = null, $attributes = array())
 	{
 		$value = $this->calculateValue($name, $value);
+
 		return Form::input('hidden', $name, $value, $attributes);
 	}
 
@@ -236,6 +274,7 @@ class Formly
 		$value = $this->calculateValue($name, $value);
 		$attributes = $this->setAttributes($name, $attributes);
 		$field = Form::text($name, $value, $attributes);
+
 		return $this->buildWrapper($field, $name, $label);
 	}
 
@@ -257,6 +296,7 @@ class Formly
 			$attributes['rows'] = 4;
 		}
 		$field = Form::textarea($name, $value, $attributes);
+
 		return $this->buildWrapper($field, $name, $label);
 	}
 
@@ -272,6 +312,7 @@ class Formly
 	{
 		$attributes = $this->setAttributes($name, $attributes);
 		$field = Form::password($name, $attributes);
+
 		return $this->buildWrapper($field, $name, $label);
 	}
 
@@ -290,6 +331,7 @@ class Formly
 		$selected = $this->calculateValue($name, $selected);
 		$attributes = $this->setAttributes($name, $attributes);
 		$field = Form::select($name, $options, $selected, $attributes);
+
 		return $this->buildWrapper($field, $name, $label);
 	}
 
@@ -308,6 +350,7 @@ class Formly
 		$checked = $this->calculateValue($name, $checked);
 		$attributes = $this->setAttributes($name, $attributes);
 		$field = Form::checkbox($name, $value, $checked, $attributes);
+
 		return $this->buildWrapper($field, $name, $label, true);
 	}
 
@@ -323,6 +366,7 @@ class Formly
 	{
 		$attributes = $this->setAttributes($name, $attributes);
 		$field = Form::file($name, $attributes);
+
 		return $this->buildWrapper($field, $name, $label);
 	}
 
@@ -345,25 +389,25 @@ class Formly
 		$comment = '';
 		if ( ! empty($this->comments[$name]))
 		{
-			$comment = '<div class="'.Config::get('formly::commentClass').'">';
+			$comment = '<div class="'.$this->getOption('commentClass').'">';
 			$comment .= $this->comments[$name];
 			$comment .= '</div>';
 		}
 
 		$class = 'control-group';
-		if (Config::get('formly::controlGroupError') && ! empty($error))
+		if ($this->getOption('controlGroupError') && ! empty($error))
 		{
-		    $class .= ' ' . Config::get('formly::controlGroupError');
+		    $class .= ' ' . $this->getOption('controlGroupError');
 		}
 
-		$id = (Config::get('formly::nameAsId')) ? ' id="control-group-'.$name.'"' : '';
+		$id = ($this->getOption('nameAsId')) ? ' id="control-group-'.$name.'"' : '';
 		$out  = '<div class="'.$class.'"'.$id.'>';
 		$out .= $this->buildLabel($name, $label);
 		$out .= '<div class="controls">'.PHP_EOL;
 		$out .= ($checkbox === true) ? '<label class="checkbox">' : '';
 		$out .= $field;
 
-		if (Config::get('formly::displayInlineErrors') && ! empty($error))
+		if ($this->getOption('displayInlineErrors') && ! empty($error))
 		{
 			// L4 errors already have this class
 			//$out .= '<span class="help-inline">'.$error.'</span>';
@@ -385,6 +429,7 @@ class Formly
 
 		$out .= '</div>';
 		$out .= '</div>'.PHP_EOL;
+
 		return $out;
 	}
 
@@ -401,13 +446,14 @@ class Formly
 		if ( ! empty($label))
 		{
 			$class = 'control-label';
-			if (Config::get('formly::requiredLabel') && substr($label, -strlen(Config::get('formly::requiredLabel'))) == Config::get('formly::requiredLabel'))
+			if ($this->getOption('requiredLabel') && substr($label, -strlen($this->getOption('requiredLabel'))) == $this->getOption('requiredLabel'))
 			{
-				$label = Config::get('formly::requiredPrefix') . str_replace(Config::get('formly::requiredLabel'), '', $label) . Config::get('formly::requiredSuffix');
-				$class .= ' ' . Config::get('formly::requiredClass');
+				$label = $this->getOption('requiredPrefix') . str_replace($this->getOption('requiredLabel'), '', $label) . $this->getOption('requiredSuffix');
+				$class .= ' ' . $this->getOption('requiredClass');
 			}
 			$out .= Form::label($name, $label, array('class' => $class));
 		}
+
 		return $out;
 	}
 
@@ -447,6 +493,7 @@ class Formly
 		{
 			$result = $this->defaults->$name;
 		}
+
         return $result;
 	}
 
@@ -468,9 +515,9 @@ class Formly
 		}
 
 		// set the id attribute
-		if (Config::get('formly::nameAsId') && ! isset($attributes['id']))
+		if ($this->getOption('nameAsId') && ! isset($attributes['id']))
 		{
-			$attributes['id'] = Config::get('formly::idPrefix') . $name;
+			$attributes['id'] = $this->getOption('idPrefix') . $name;
 		}
 
 		return $attributes;
