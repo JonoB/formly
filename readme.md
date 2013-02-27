@@ -29,7 +29,7 @@ Now run `composer update`.
 Add the following code to the `aliases` section of the `app/config/app.php` file
 
 ```php
-'Radiant' => 'Jonob\Formly\Formly',
+'Formly' => 'Jonob\Formly\Formly',
 ```
 
 so that it looks something like the following:
