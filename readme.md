@@ -4,9 +4,6 @@ Forms support in Laravel, with Twitter Bootstrap styling. All form inputs use La
 to create the actual html. Some added goodies like setting form defaults, repopulating forms
 after failed validation and showing failed validation errors.
 
-Note that Meido's <a href="https://github.com/meido/form">Form</a> and <a href="https://github.com/meido/html">HTML</a> packages are required dependancies, which composer will automatically
-install for you.
-
 There is a <a href="http://www.screencast.com/t/OiBx2IChh9">5 minute video overview</a> of using Formly. Although this was originally
 done for Laravel 3, the concepts remain identical.
 
@@ -14,11 +11,11 @@ done for Laravel 3, the concepts remain identical.
 
 ### Composer
 
-Add `"jonob/formly": "1.1.*",` to the `require` section of your `composer.json`:
+Add `"jonob/formly": "1.2.*",` to the `require` section of your `composer.json`:
 
 ```composer
 "require": {
-	"jonob/formly": "1.1.*"
+	"jonob/formly": "1.2.*"
 },
 ```
 
@@ -63,11 +60,11 @@ return View::make('posts.form')->with('form', $form);
 ```
 
 ### Forms
-In generaly, Formly follows Meido's default form helpers in terms of the method names and function parameters.
+In generaly, Formly follows Laravel's default form helpers in terms of the method names and function parameters.
 There are two exceptions. Firstly, all methods are called non-statically and secondly the second parameter in
-Fomrly is the input's label. For example:
+Formly is the input's label. For example:
 ```php
-// Standard Meido form input
+// Standard Laravel form input
 Form::text($name, $value, $attributes);
 
 // Formly
