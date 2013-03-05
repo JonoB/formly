@@ -1,6 +1,6 @@
 <?php namespace Jonob\Formly;
 
-use Meido\Form\FormFacade as Form;
+use Illuminate\Support\Facades\Form;
 use Illuminate\Support\MessageBag;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Session;
@@ -161,11 +161,9 @@ class Formly
      * @param null   $action    Defaults to the current url
      * @param string $method    Defaults to POST
      * @param array  $attributes
-     * @param null   $https
-     * @param bool   $for_files
      * @return string
      */
-    public function open($action = null, $method = 'POST', $attributes = array(), $https = null, $for_files = false)
+    public function open($action = null, $method = 'POST', $attributes = array())
 	{
 		// If an action has not been specified, use the current url
         $action = $action ?: Request::fullUrl();
@@ -180,11 +178,14 @@ class Formly
 			$attributes['class'] .= ' ' . $this->getOption('formClass');
 		}
 
-		$out = Form::open($action, $method, $attributes, $https);
+        // Laravel's form builder uses a single array as a parameter
+        $attributes['url'] = $action;
+        $attributes['method'] = $method;
+		$out = Form::open($attributes);
 
 		if ($this->getOption('autoToken'))
 		{
-			$out .= Form::hidden('csrf_token', csrf_token());
+			$out .= "\n" . Form::token();
 		}
 
 		return $out;
@@ -195,12 +196,11 @@ class Formly
 	 *
 	 * @param  string $action
 	 * @param  array  $attributes
-	 * @param  bool $https
 	 * @return string
 	 */
-	public function openPost($action = null, $attributes = array(), $https = null)
+	public function openPost($action = null, $attributes = array())
 	{
-		return $this->open($action, 'POST', $attributes, $https);
+		return $this->open($action, 'POST', $attributes);
 	}
 
 	/**
@@ -208,12 +208,11 @@ class Formly
 	 *
 	 * @param  string $action
 	 * @param  array  $attributes
-	 * @param  bool $https
 	 * @return string
 	 */
-	public function openPut($action = null, $attributes = array(), $https = null)
+	public function openPut($action = null, $attributes = array())
 	{
-		return $this->open($action, 'PUT', $attributes, $https);
+		return $this->open($action, 'PUT', $attributes);
 	}
 
 	/**
@@ -221,12 +220,11 @@ class Formly
 	 *
 	 * @param  string $action
 	 * @param  array  $attributes
-	 * @param  bool $https
 	 * @return string
 	 */
-	public function openDelete($action = null, $attributes = array(), $https = null)
+	public function openDelete($action = null, $attributes = array())
 	{
-		return $this->open($action, 'DELETE', $attributes, $https);
+		return $this->open($action, 'DELETE', $attributes);
 	}
 
 	/**
@@ -235,14 +233,13 @@ class Formly
 	 * @param  string $action
 	 * @param  string $method
 	 * @param  array  $attributes
-	 * @param  bool $https
 	 * @return string
 	 */
-	public function openFiles($action = null, $method = 'POST', $attributes = array(), $https = null)
+	public function openFiles($action = null, $method = 'POST', $attributes = array())
 	{
 		$attributes['enctype'] = 'multipart/form-data';
 
-		return $this->open($action, $method, $attributes, $https);
+		return $this->open($action, $method, $attributes);
 	}
 
 	/**
@@ -257,7 +254,7 @@ class Formly
 	{
 		$value = $this->calculateValue($name, $value);
 
-		return Form::input('hidden', $name, $value, $attributes);
+        return Form::hidden($name, $value, $attributes);
 	}
 
 	/**
