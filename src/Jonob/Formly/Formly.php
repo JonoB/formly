@@ -69,7 +69,7 @@ class Formly
     {
         // L4 does not currently have a method for loading an entire config file
         // so we have so spin through them individually for now
-        $options = array('formClass', 'autoToken', 'nameAsId', 'idPrefix', 'requiredLabel', 'requiredPrefix',
+        $options = array('formClass', 'autocomplete', 'autoToken', 'nameAsId', 'idPrefix', 'requiredLabel', 'requiredPrefix',
             'requiredSuffix', 'requiredClass', 'controlGroupError', 'displayInlineErrors', 'commentClass'
         );
         foreach($options as $option)
@@ -176,6 +176,12 @@ class Formly
 		elseif (strpos($attributes['class'], 'form-') === false)
 		{
 			$attributes['class'] .= ' ' . $this->getOption('formClass');
+		}
+
+		// Auto-complete attribute
+		if (empty($attributes['autocomplete']))
+		{
+			$attributes['autocomplete'] = $this->getOption('autocomplete');
 		}
 
         // Laravel's form builder uses a single array as a parameter

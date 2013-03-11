@@ -4,6 +4,8 @@ return array(
 
     'formClass' => 'form-horizontal',
 
+    'autocomplete' => 'off',
+
     'autoToken' => true,
 
     'nameAsId' => true,
