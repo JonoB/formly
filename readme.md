@@ -11,11 +11,11 @@ done for Laravel 3, the concepts remain identical.
 
 ### Composer
 
-Add `"jonob/formly": "1.2.*",` to the `require` section of your `composer.json`:
+Add `"jonob/formly": "dev-master",` to the `require` section of your `composer.json`:
 
 ```composer
 "require": {
-	"jonob/formly": "1.2.*"
+	"jonob/formly": "dev-master"
 },
 ```
 
