@@ -454,6 +454,7 @@ class Formly
 				$label = $this->getOption('requiredPrefix') . str_replace($this->getOption('requiredLabel'), '', $label) . $this->getOption('requiredSuffix');
 				$class .= ' ' . $this->getOption('requiredClass');
 			}
+			$name = $this->getOption('idPrefix') . $name;
 			$out .= Form::label($name, $label, array('class' => $class));
 		}
 
