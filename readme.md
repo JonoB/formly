@@ -23,20 +23,14 @@ Now run `composer update`.
 
 ### Laravel
 
-Add the following code to the `aliases` section of the `app/config/app.php` file
-
+Add the following code to the `providers` section of the `app/config/app.php` file:
 ```php
-'Formly' => 'Jonob\Formly\Formly',
+'Jonob\Formly\FormlyServiceProvider',
 ```
 
-so that it looks something like the following:
-
+Add the following code to the `aliases` section of the `app/config/app.php` file:
 ```php
-'aliases' => array(
-	...
-	'Formly'       => 'Jonob\Formly\Formly',
-	...
-),
+'Formly' => 'Jonob\Formly\Formly',
 ```
 
 # Usage
