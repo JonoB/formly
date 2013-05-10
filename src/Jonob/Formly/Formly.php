@@ -487,13 +487,13 @@ class Formly
 		}
 
 		// check if there is a default value set specifically for this field
-		elseif ( ! empty($value) or $value === '0')
+		elseif ( ! empty($value))
 		{
 			$result = $value;
 		}
 
 		// lastly, check if any defaults have been set for the form as a whole
-		elseif ( ! empty($this->defaults->$name) or $this->defaults->$name === '0')
+		elseif ( ! empty($this->defaults->$name))
 		{
 			$result = $this->defaults->$name;
 		}
