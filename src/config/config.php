@@ -6,8 +6,6 @@ return array(
 
     'autocomplete' => 'off',
 
-    'autoToken' => true,
-
     'nameAsId' => true,
 
     'idPrefix' => 'field_',

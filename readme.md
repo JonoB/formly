@@ -196,8 +196,7 @@ can be used to set many options at once, or a single option.
 $defaults = Post::find($id);
 
 $options = array(
-	'formClass' => 'form_vertical',
-	'autoToken' = false
+	'formClass' => 'form_vertical'
 );
 
 // Set multiple options when the class is instantiated
