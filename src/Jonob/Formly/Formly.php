@@ -352,6 +352,23 @@ class Formly
 	}
 
 	/**
+	 * Create a HTML radio input element.
+	 *
+	 * @param  string  $name
+	 * @param  string  $value
+	 * @param  bool    $checked
+	 * @param  array   $attributes
+	 * @return string
+	 */
+	public function radio($name, $value = '1', $checked = false, $attributes = array())
+	{
+		$checked = $this->calculateValue($name, $checked, $value);
+		$attributes = $this->setAttributes($name, $attributes);
+
+		return Form::radio($name, $value, $checked, $attributes);
+	}
+
+	/**
 	 * Create a HTML file input element.
 	 *
 	 * @param  string  $name
@@ -464,10 +481,11 @@ class Formly
 	 * to get this value after the redirect.
 	 *
 	 * @param  string $name Html form field to populate
-	 * @param  string $value The default value for the field
+	 * @param  string $default The default value for the field
+	 * @param  string $radioValue Set to true for radio buttons
 	 * @return string
 	 */
-	private function calculateValue($name, $value = '')
+	private function calculateValue($name, $default = '', $radioValue = '')
 	{
 		$result = '';
 
@@ -477,22 +495,27 @@ class Formly
 		// @see http://laravel.com/docs/input#old-input
 		if (Input::old($name) !== null)
 		{
-			$result = Input::old($name, $value);
+			$result = ($radioValue)
+				? Input::old($name) == $radioValue
+				: Input::old($name, $default);
+
 		}
 
 		// check if there is a default value set specifically for this field
-		elseif ( ! empty($value))
+		elseif ( ! empty($default))
 		{
-			$result = $value;
+			$result = $default;
 		}
 
 		// lastly, check if any defaults have been set for the form as a whole
 		elseif ( ! empty($this->defaults->$name))
 		{
-			$result = $this->defaults->$name;
+			$result = ($radioValue)
+				? $this->defaults->$name == $radioValue
+				: $this->defaults->$name;
 		}
 
-        return $result;
+		return $result;
 	}
 
     /**
