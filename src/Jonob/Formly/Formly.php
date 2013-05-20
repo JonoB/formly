@@ -541,6 +541,10 @@ class Formly
 			$attributes['id'] = $this->getOption('idPrefix') . $name;
 		}
 
+		// if the disabled attribute is set to false, then we will actually unsert it
+		// as some browsers will set the field to disabled
+		if (isset($attributes['disabled']) && ! $attributes['disabled']) unset($attributes['disabled']);
+
 		return $attributes;
 	}
 
