@@ -508,7 +508,7 @@ class Formly
 		}
 
 		// lastly, check if any defaults have been set for the form as a whole
-		elseif ( ! empty($this->defaults->$name))
+		elseif (isset($this->defaults->$name))
 		{
 			$result = ($radioValue)
 				? $this->defaults->$name == $radioValue
