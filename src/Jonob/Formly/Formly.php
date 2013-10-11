@@ -92,7 +92,7 @@ class Formly
 		
 		if (count($defaults) > 0)
 		{
-			$this->defaults = (object)$defaults;
+			$this->defaults = $defaults;
 		}
 
 		return $this;
