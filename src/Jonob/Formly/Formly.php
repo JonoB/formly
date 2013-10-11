@@ -88,6 +88,8 @@ class Formly
 	 */
 	public function setDefaults($defaults = array())
 	{
+		$defaults = json_decode(json_encode($defaults), true);
+		
 		if (count($defaults) > 0)
 		{
 			$this->defaults = (object)$defaults;
@@ -488,7 +490,10 @@ class Formly
 	private function calculateValue($name, $default = '', $radioValue = '')
 	{
 		$result = '';
-
+		
+		//make array named fields to dot notation
+		$field_name = str_replace(array('[', ']'), array('.', ''), $name);
+		
 		// First check if there is post data
 		// This assumes that you are redirecting after failed post
 		// and that you have flashed the data
@@ -508,11 +513,11 @@ class Formly
 		}
 
 		// lastly, check if any defaults have been set for the form as a whole
-		elseif (isset($this->defaults->$name))
+		elseif ($value = array_get($this->defaults, $field_name))
 		{
 			$result = ($radioValue)
-				? $this->defaults->$name == $radioValue
-				: $this->defaults->$name;
+				? $value == $radioValue
+				: $value;
 		}
 
 		return $result;
