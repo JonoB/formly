@@ -294,7 +294,9 @@ class Formly
 		}
 		$field = Form::textarea($name, $value, $attributes);
 
-		return $this->buildWrapper($field, $name, $label);
+        $labels = isset($attributes['labels']) ? $attributes['labels'] : true;
+
+		return $this->buildWrapper($field, $name, $label, false, $labels);
 	}
 
 	/**
@@ -345,7 +347,7 @@ class Formly
 	public function checkbox($name, $label = '', $value = '1', $checked = false, $attributes = array())
 	{
 		$checked = $this->calculateValue($name, $checked);
-		$attributes = $this->setAttributes($name, $attributes);
+		$attributes = $this->setAttributes($name, $attributes, true);
 		$field = Form::checkbox($name, $value, $checked, $attributes);
 
 		return $this->buildWrapper($field, $name, $label, true);
@@ -391,9 +393,11 @@ class Formly
 	 * @param  string  $name The name of the field
 	 * @param  string  $label The label name
 	 * @param  boolean $checkbox
+     * @param  boolean $labels
+     *
 	 * @return string
 	 */
-	private function buildWrapper($field, $name, $label = '', $checkbox = false)
+	private function buildWrapper($field, $name, $label = '', $checkbox = false, $labels = true)
 	{
 		if ($this->errors and $this->errors instanceof MessageBag)
 		{
@@ -401,25 +405,51 @@ class Formly
 		}
 
 		$comment = '';
-		if ( ! empty($this->comments[$name]))
+		if ( ! empty($this->comments[$name]) && ! $checkbox)
 		{
+            // normal comments
 			$comment = '<div class="'.$this->getOption('commentClass').'">';
 			$comment .= $this->comments[$name];
 			$comment .= '</div>';
 		}
+        elseif ( ! empty($this->comments[$name]))
+        {
+            // checkbox comments shouldn't be more readable
+            $comment .= $this->comments[$name];
+        }
 
-		$class = 'control-group';
+		$class = 'form-group';
 		if ($this->getOption('controlGroupError') && ! empty($error))
 		{
 		    $class .= ' ' . $this->getOption('controlGroupError');
 		}
 
-		$id = ($this->getOption('nameAsId')) ? ' id="control-group-'.$name.'"' : '';
-		$out  = '<div class="'.$class.'"'.$id.'>';
-		$out .= $this->buildLabel($name, $label);
-		$out .= '<div class="controls">'.PHP_EOL;
-		$out .= ($checkbox === true) ? '<label class="checkbox">' : '';
-		$out .= $field;
+        $id = ($this->getOption('nameAsId')) ? ' id="form-group-'.$name.'"' : '';
+        $out  = '<div class="'.$class.'"'.$id.'>';
+
+        if ($labels)
+        {
+            $out .= $this->buildLabel($name, $label);
+            $out .= '<div class="col-sm-10">'.PHP_EOL;
+        }
+        else
+        {
+            $out .= '<div class="col-sm-12">'.PHP_EOL;
+        }
+
+        if ( ! $checkbox)
+        {
+            $out .= $field;
+        }
+        else
+        {
+            $out .= '<div class="checkbox">';
+            $out .= '<label>';
+            $out .= $field;
+            $out .= $comment;
+            $out .= '</label>';
+            $out .= '</div>';
+        }
 
 		if ($this->getOption('displayInlineErrors') && ! empty($error))
 		{
@@ -428,15 +458,7 @@ class Formly
 			$out .= $error;
 		}
 
-		if ($checkbox)
-		{
-			if ( ! empty($this->comments[$name]))
-			{
-				$out .= $comment;
-			}
-			$out .= '</label>';
-		}
-		else
+        if ( ! $checkbox)
 		{
 			$out .= $comment;
 		}
@@ -457,9 +479,9 @@ class Formly
 	private function buildLabel($name, $label = '')
 	{
 		$out = '';
+        $class = 'col-sm-2 control-label';
 		if ( ! empty($label))
 		{
-			$class = 'control-label';
 			if ($this->getOption('requiredLabel') && substr($label, -strlen($this->getOption('requiredLabel'))) == $this->getOption('requiredLabel'))
 			{
 				$label = $this->getOption('requiredPrefix') . str_replace($this->getOption('requiredLabel'), '', $label) . $this->getOption('requiredSuffix');
@@ -468,6 +490,11 @@ class Formly
 			$name = $this->getOption('idPrefix') . $name;
 			$out .= Form::label($name, $label, array('class' => $class));
 		}
+        else
+        {
+            // blank label that still has a for
+            $out .= Form::label($name, '&nbsp;', array('class' => $class));
+        }
 
 		return $out;
 	}
@@ -526,7 +553,7 @@ class Formly
      * @param array $attributes
      * @return array
      */
-    private function setAttributes($name, $attributes = array())
+    private function setAttributes($name, $attributes = array(), $checkbox = false)
 	{
 		// set the comment
 		if ( ! empty($attributes['comment']))
@@ -534,6 +561,11 @@ class Formly
 			$this->comments[$name] = $attributes['comment'];
 			unset($attributes['comment']);
 		}
+
+        if ( ! $checkbox)
+        {
+            $attributes['class'] = 'form-control';
+        }
 
 		// set the id attribute
 		if ($this->getOption('nameAsId') && ! isset($attributes['id']))
