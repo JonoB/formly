@@ -294,9 +294,7 @@ class Formly
 		}
 		$field = Form::textarea($name, $value, $attributes);
 
-        $labels = isset($attributes['labels']) ? $attributes['labels'] : true;
-
-		return $this->buildWrapper($field, $name, $label, false, $labels);
+		return $this->buildWrapper($field, $name, $label);
 	}
 
 	/**
@@ -391,13 +389,12 @@ class Formly
 	 *
 	 * @param  string  $field The html for the field
 	 * @param  string  $name The name of the field
-	 * @param  string  $label The label name
+	 * @param  string/null  $label The label name / null means no label
 	 * @param  boolean $checkbox
-     * @param  boolean $labels
      *
 	 * @return string
 	 */
-	private function buildWrapper($field, $name, $label = '', $checkbox = false, $labels = true)
+	private function buildWrapper($field, $name, $label = '', $checkbox = false)
 	{
 		if ($this->errors and $this->errors instanceof MessageBag)
 		{
@@ -427,14 +424,14 @@ class Formly
         $id = ($this->getOption('nameAsId')) ? ' id="form-group-'.$name.'"' : '';
         $out  = '<div class="'.$class.'"'.$id.'>';
 
-        if ($labels)
+        if ($label === null)
         {
-            $out .= $this->buildLabel($name, $label);
-            $out .= '<div class="col-sm-10">'.PHP_EOL;
+            $out .= '<div class="col-sm-12">'.PHP_EOL;
         }
         else
         {
-            $out .= '<div class="col-sm-12">'.PHP_EOL;
+            $out .= $this->buildLabel($name, $label);
+            $out .= '<div class="col-sm-10">'.PHP_EOL;
         }
 
         if ( ! $checkbox)
